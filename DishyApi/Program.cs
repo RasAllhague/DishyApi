@@ -31,6 +31,7 @@ public static class Program
         builder.Services.AddSingleton<IDbConnService, DbConnService>();
         builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddSingleton<IIngredientService, IngredientService>();
+        builder.Services.AddSingleton<IIngredientCategoryService, IngredientCategoryService>();
         builder.Services.AddTransient<IPasswordHasher<UserModel>, PasswordHasher<UserModel>>();
         builder.Services.AddTransient<ITokenService, TokenService>();
         builder.Services.AddAuthentication(options =>

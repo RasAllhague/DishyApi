@@ -240,3 +240,13 @@ VALUES
 (1, "viewer", "Collectiv right for readonly viewer Users in the current context", NOW()),
 (2, "user", "Collectiv right for a normal (reading and editing) user in the current context", NOW()),
 (3, "admin", "Collectiv right for admin privilges in the current context.", NOW());
+
+INSERT INTO `Users` 
+VALUES 
+(1, 'Test', 'test@test.test', 'AQAAAAEAACcQAAAAEDXOF8wc49Hk4uqcuk5UpDQe1ZnI6MEbN3WozyY9YBV7QzbFk8GR0Wy1TaG8TCG0pw==', NOW(), NULL);
+
+INSERT INTO `CategoryTypes`
+VALUES
+(1, 'Dish', NOW()),
+(2, 'Ingredient', NOW()),
+(3, 'Foodplan', NOW());

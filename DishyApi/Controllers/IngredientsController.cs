@@ -23,11 +23,13 @@ public class IngredientsController : LoggingControllerBase
 {
     private readonly IIngredientService _ingredientService;
     private readonly ITokenService _tokenService;
+    private readonly IIngredientCategoryService _ingredientCategoryService;
 
-    public IngredientsController(ILogger<IngredientsController> logger, IIngredientService ingredientService, ITokenService tokenService) : base(logger)
+    public IngredientsController(ILogger<IngredientsController> logger, IIngredientService ingredientService, ITokenService tokenService, IIngredientCategoryService ingredientCategoryService) : base(logger)
     {
         _ingredientService = ingredientService;
         _tokenService = tokenService;
+        _ingredientCategoryService = ingredientCategoryService;
     }
 
     // GET: api/<IngredientsController>
@@ -142,7 +144,7 @@ public class IngredientsController : LoggingControllerBase
 
     // GET api/<IngredientsController>/5/Categories/
     [HttpGet("{id}/Categories")]
-    public async Task<ActionResult<IEnumerable<CategoryModel>>> GetCategoriesOfIngredient(int id)
+    public async Task<ActionResult<IEnumerable<CategoryModel>>> GetCategoriesOfIngredientAsync(int id)
     {
         var authUser = await _tokenService.RetrievedUserFromTokenAsync(HttpContext);
         if (authUser is null)
@@ -150,6 +152,40 @@ public class IngredientsController : LoggingControllerBase
             return Unauthorized();
         }
 
-        throw new NotImplementedException();
+        var categories = await _ingredientCategoryService.GetCategoriesOfIngredientAsync(authUser.Id, id);
+
+        return Ok(categories);
+    }
+
+    // GET api/<IngredientsController>/Categories
+    [HttpGet("Categories")]
+    public async Task<ActionResult<IEnumerable<CategoryModel>>> GetIngredientCategoriesAsync()
+    {
+        var authUser = await _tokenService.RetrievedUserFromTokenAsync(HttpContext);
+        if (authUser is null)
+        {
+            return Unauthorized();
+        }
+
+        var categories = await _ingredientCategoryService.GetAllIngredientCategoriesAsync(authUser.Id);
+
+        return Ok(categories);
+    }
+
+    [HttpPut("{idIngredient}/Caregories/{idCategory}")]
+    public async Task<ActionResult> AddIngredientToCategoryAsync(int idIngredient, int idCategory)
+    {
+        var authUser = await _tokenService.RetrievedUserFromTokenAsync(HttpContext);
+        if (authUser is null)
+        {
+            return Unauthorized();
+        }
+
+        if (!await _ingredientCategoryService.AddIngredientToCategoryAsync(authUser.Id, idIngredient, idCategory))
+        {
+            return BadRequest("Ingredient category with this combination already exists.");
+        }
+
+        return Ok();
     }
 }
