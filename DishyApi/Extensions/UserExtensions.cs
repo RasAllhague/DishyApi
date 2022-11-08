@@ -23,8 +23,6 @@ public static class UserExtensions
             UserName = request.username,
             Email = request.email,
             Password = request.password,
-            CreateDate = request.createDate,
-            ModifyDate = request.modifyDate
         };
     }
 
@@ -35,7 +33,7 @@ public static class UserExtensions
     /// <returns>A <see cref="UserResponse"/> based on the model.</returns>
     public static UserResponse ToUserResponse(this UserModel model)
     {
-        return new UserResponse(model.Id, model.UserName, model.Email, model.CreateDate, model.ModifyDate);
+        return new UserResponse(model.Id, model.UserName, model.Email);
     }
 
     /// <summary>

@@ -27,8 +27,7 @@ CREATE TABLE UserRights(
     PRIMARY KEY(Id),
     UNIQUE(UserId, RightId),
     FOREIGN KEY (UserId) REFERENCES Users(Id),
-    FOREIGN KEY (RightId) REFERENCES Rights(Id),
-    FOREIGN KEY (UserId) REFERENCES Users(Id)
+    FOREIGN KEY (RightId) REFERENCES Rights(Id)
 );
 
 CREATE TABLE Images(
@@ -55,9 +54,7 @@ CREATE TABLE Ingredients(
     ModifyDate TIMESTAMP,
     PRIMARY KEY(Id),
     UNIQUE(Name, CreateUserId),
-    FOREIGN KEY (ImageId) REFERENCES Images(Id),
-    FOREIGN KEY (CreateUserId) REFERENCES Users(Id),
-    FOREIGN KEY (ModifyUserId) REFERENCES Users(Id) 
+    FOREIGN KEY (CreateUserId) REFERENCES Users(Id)
 );
 
 CREATE TABLE CategoryTypes(
@@ -72,16 +69,15 @@ CREATE TABLE Categories(
     Id INTEGER AUTO_INCREMENT,
     Name VARCHAR(50) NOT NULL,
     Description VARCHAR(255),
-    category_type_id INTEGER NOT NULL,
+    CategoryTypeId INTEGER NOT NULL,
     CreateUserId INTEGER NOT NULL,
     CreateDate TIMESTAMP NOT NULL,
     ModifyUserId INTEGER,
     ModifyDate TIMESTAMP,
     PRIMARY KEY (Id),
     UNIQUE(Name, CreateUserId),
-    FOREIGN KEY (category_type_id) REFERENCES CategoryTypes(Id),
-    FOREIGN KEY (CreateUserId) REFERENCES Users(Id),
-    FOREIGN KEY (ModifyUserId) REFERENCES Users(Id) 
+    FOREIGN KEY (CategoryTypeId) REFERENCES CategoryTypes(Id),
+    FOREIGN KEY (CreateUserId) REFERENCES Users(Id)
 );
 
 CREATE TABLE IngredientCategories(
@@ -108,9 +104,7 @@ CREATE TABLE Dishes(
     ModifyUserId INTEGER,
     ModifyDate TIMESTAMP,
     PRIMARY KEY(Id),
-    FOREIGN KEY (ImageId) REFERENCES Images(Id),
-    FOREIGN KEY (CreateUserId) REFERENCES Users(Id),
-    FOREIGN KEY (ModifyUserId) REFERENCES Users(Id) 
+    FOREIGN KEY (CreateUserId) REFERENCES Users(Id)
 );
 
 CREATE TABLE DishCategories(
@@ -145,7 +139,6 @@ CREATE TABLE DishIngredients(
     UNIQUE(DishId, IngredientId, CreateUserId),
     FOREIGN KEY (DishId) REFERENCES Dishes(Id),
     FOREIGN KEY (IngredientId) REFERENCES Ingredients(Id),
-    FOREIGN KEY (MeasurementUnitId) REFERENCES MeasurementUnits(Id),
     FOREIGN KEY (CreateUserId) REFERENCES Users(Id)
 );
 
@@ -162,10 +155,8 @@ CREATE TABLE Foodplans (
     ModifyUserId INTEGER,
     ModifyDate INTEGER,
     PRIMARY KEY(Id),
-    FOREIGN KEY (ImageId) REFERENCES Images(Id),
     FOREIGN KEY (OwningUserId) REFERENCES Users(Id),
-    FOREIGN KEY (CreateUserId) REFERENCES Users(Id),
-    FOREIGN KEY (ModifyUserId) REFERENCES Users(Id)
+    FOREIGN KEY (CreateUserId) REFERENCES Users(Id)
 );
 
 CREATE TABLE FoodplanDishes(
@@ -192,15 +183,13 @@ CREATE TABLE FoodplanUserRights(
     Deactivated BOOLEAN,
     CreateUserId INTEGER NOT NULL,
     CreateDate TIMESTAMP NOT NULL,
-    ModifyUserId INTEGER,
     ModifyDate TIMESTAMP,
     PRIMARY KEY(Id),
     UNIQUE(FoodplanId, UserId, RightId),
     FOREIGN KEY (FoodplanId) REFERENCES Foodplans(Id),
     FOREIGN KEY (UserId) REFERENCES Users(Id),
     FOREIGN KEY (RightId) REFERENCES Rights(Id),
-    FOREIGN KEY (CreateUserId) REFERENCES Users(Id),
-    FOREIGN KEY (ModifyUserId) REFERENCES Users(Id)
+    FOREIGN KEY (CreateUserId) REFERENCES Users(Id)
 );
 
 CREATE TABLE DishUserRights(
@@ -220,8 +209,7 @@ CREATE TABLE DishUserRights(
     FOREIGN KEY (DishId) REFERENCES Dishes(Id),
     FOREIGN KEY (UserId) REFERENCES Users(Id),
     FOREIGN KEY (RightId) REFERENCES Rights(Id),
-    FOREIGN KEY (CreateUserId) REFERENCES Users(Id),
-    FOREIGN KEY (ModifyUserId) REFERENCES Users(Id)
+    FOREIGN KEY (CreateUserId) REFERENCES Users(Id)
 );
 
 /* DROP TABLE SQLs */

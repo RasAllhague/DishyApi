@@ -12,18 +12,14 @@ namespace DishyApi.Controllers;
 /// <param name="id">Id of the user</param>
 /// <param name="username">Name of the user.</param>
 /// <param name="email">Email of the user.</param>
-/// <param name="createDate">Creation date of the user.</param>
-/// <param name="modifyDate">Last modification date of the user.</param>
-public readonly record struct UserResponse(int id, string username, string email, DateTime createDate, DateTime? modifyDate);
+public readonly record struct UserResponse(int id, string username, string email);
 /// <summary>
 /// A request message with the user data.
 /// </summary>
 /// <param name="username">Name of the user.</param>
 /// <param name="email">Email of the user.</param>
 /// <param name="password">Password of the user.</param>
-/// <param name="createDate">Creation date of the user.</param>
-/// <param name="modifyDate">Last modification date of the user.</param>
-public readonly record struct UserRequest(string username, string email, string password, DateTime createDate, DateTime? modifyDate);
+public readonly record struct UserRequest(string username, string email, string password);
 
 /// <summary>
 /// Api controller for user operations.
@@ -34,15 +30,17 @@ public readonly record struct UserRequest(string username, string email, string 
 public class UsersController : LoggingControllerBase
 {
     private readonly IUserService _userService;
+    private readonly ITokenService _tokenService;
 
     /// <summary>
     /// Creates a new instance of <see cref="UsersController"/> and injects an <see cref="IUserService"/> instance.
     /// </summary>
     /// <param name="logger">The logger needed for logging.</param>
     /// <param name="userService">The user service needed to perform user operations.</param>
-    public UsersController(ILogger<UsersController> logger, IUserService userService) : base(logger)
+    public UsersController(ILogger<UsersController> logger, IUserService userService, ITokenService tokenService) : base(logger)
     {
         _userService = userService;
+        _tokenService = tokenService;
     }
 
     // GET: api/<UsersController>
@@ -53,6 +51,12 @@ public class UsersController : LoggingControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UserResponse>>> GetUsersAsync()
     {
+        var user = await _tokenService.RetrievedUserFromTokenAsync(HttpContext);
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+
         _logger.LogDebug("All user informations have been requested.");
 
         var users = await _userService.GetUsersAsync();
@@ -69,6 +73,12 @@ public class UsersController : LoggingControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<UserResponse>> GetUserAsync(int id)
     {
+        var authUser = await _tokenService.RetrievedUserFromTokenAsync(HttpContext);
+        if (authUser is null)
+        {
+            return Unauthorized();
+        }
+
         _logger.LogDebug("User information for user with id {0} has been requested.", id);
 
         var user = await _userService.GetUserAsync(id);
@@ -90,6 +100,12 @@ public class UsersController : LoggingControllerBase
     [HttpPost]
     public async Task<ActionResult> CreateUserAsync([FromBody] UserRequest request)
     {
+        var authUser = await _tokenService.RetrievedUserFromTokenAsync(HttpContext);
+        if (authUser is null)
+        {
+            return Unauthorized();
+        }
+
         _logger.LogInformation("The creation of a new user has been requested.");
 
         if (await _userService.ExistsAsync(request.email))
@@ -114,6 +130,12 @@ public class UsersController : LoggingControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult<UserResponse>> EditUserAsync(int id, [FromBody] UserRequest request)
     {
+        var authUser = await _tokenService.RetrievedUserFromTokenAsync(HttpContext);
+        if (authUser is null)
+        {
+            return Unauthorized();
+        }
+
         _logger.LogDebug("User modification has been requested.");
 
         if (!await _userService.ExistsAsync(request.email))
@@ -140,6 +162,12 @@ public class UsersController : LoggingControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteUserAsync(int id)
     {
+        var authUser = await _tokenService.RetrievedUserFromTokenAsync(HttpContext);
+        if (authUser is null)
+        {
+            return Unauthorized();
+        }
+
         _logger.LogWarning("The deletion of the with {0} user has been requested", id);
 
         if (!await _userService.ExistsAsync(id))

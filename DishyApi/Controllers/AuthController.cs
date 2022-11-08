@@ -28,6 +28,7 @@ public class AuthController : LoggingControllerBase
 {
     private readonly IUserService _userService;
     private readonly JwtSettings _jwtSettings;
+    private readonly ITokenService _tokenService;
 
     /// <summary>
     /// Creates a new <see cref="AuthController"/> instance and injects all nessecary services.
@@ -35,10 +36,11 @@ public class AuthController : LoggingControllerBase
     /// <param name="logger">The service needed for logging.</param>
     /// <param name="userService">The service needed for user auth.</param>
     /// <param name="jwtSettings">The options needed for jwt generation settings.</param>
-    public AuthController(ILogger<AuthController> logger, IUserService userService, IOptions<JwtSettings> jwtSettings) : base(logger)
+    public AuthController(ILogger<AuthController> logger, IUserService userService, IOptions<JwtSettings> jwtSettings, ITokenService tokenService) : base(logger)
     {
         _userService = userService;
         _jwtSettings = jwtSettings.Value;
+        _tokenService = tokenService;
     }
 
     // GET api/<AuthController>/Logout
@@ -61,7 +63,7 @@ public class AuthController : LoggingControllerBase
     /// <returns>An <see cref="UnauthorizedResult"/> if verfication failed or an <see cref="OkResult"/> with a encrypted jwt token string.</returns>
     [AllowAnonymous]
     [HttpPost("Login")]
-    public async Task<ActionResult> Post([FromBody] LoginRequest request)
+    public async Task<ActionResult<string>> Post([FromBody] LoginRequest request)
     {
         _logger.LogInformation("User '{0}' has requested a login token.", request.email);
 
@@ -79,28 +81,6 @@ public class AuthController : LoggingControllerBase
             return Unauthorized();
         }
 
-        byte[] key = Encoding.ASCII.GetBytes(_jwtSettings.Key);
-
-        var tokenDescriptor = new SecurityTokenDescriptor()
-        {
-            Subject = new System.Security.Claims.ClaimsIdentity(new[]
-            {
-                new Claim("Id", Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            }),
-            Expires = DateTime.UtcNow.AddMinutes(30),
-            Issuer = _jwtSettings.Issuer,
-            Audience = _jwtSettings.Audience,
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
-        };
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        var jwtToken = tokenHandler.WriteToken(token);
-        var stringToken = tokenHandler.WriteToken(token);
-
-        return Ok(stringToken);
+        return Ok(_tokenService.CreateToken(user));
     }
 }

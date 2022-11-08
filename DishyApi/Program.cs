@@ -29,7 +29,9 @@ public static class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddSingleton<IDbConnService, DbConnService>();
         builder.Services.AddSingleton<IUserService, UserService>();
+        builder.Services.AddSingleton<IIngredientService, IngredientService>();
         builder.Services.AddTransient<IPasswordHasher<UserModel>, PasswordHasher<UserModel>>();
+        builder.Services.AddTransient<ITokenService, TokenService>();
         builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

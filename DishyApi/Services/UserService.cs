@@ -34,6 +34,7 @@ public class UserService : IUserService
 
         string passwordHash = _passwordHasher.HashPassword(user, user.Password);
         user.Password = passwordHash;
+        user.CreateDate = DateTime.Now;
 
         await conn.ExecuteAsync(insertSql, user);
 
@@ -112,7 +113,8 @@ public class UserService : IUserService
         {
             email = user.email,
             username = user.username,
-            password = _passwordHasher.HashPassword(dbUser, user.password)
+            password = _passwordHasher.HashPassword(dbUser, user.password),
+            modifyDate = DateTime.Now
         });
 
         if (affectedRows > 1)
@@ -145,7 +147,7 @@ public class UserService : IUserService
             sql += " Password = @password";
         }
 
-        sql += " WHERE Email = @email;";
+        sql += " ModifyDate = @modifyDate WHERE Email = @email;";
         return sql;
     }
 
