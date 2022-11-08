@@ -1,4 +1,6 @@
-﻿using MySqlConnector;
+﻿using DishyApi.Configuration;
+using Microsoft.Extensions.Options;
+using MySqlConnector;
 
 namespace DishyApi.Services;
 
@@ -7,15 +9,15 @@ namespace DishyApi.Services;
 /// </summary>
 public class DbConnService : IDbConnService
 {
-    private readonly string _connString;
+    private readonly MysqlSettings _settings;
 
     /// <summary>
-    /// Creates a new instance of <see cref="DbConnService"/> with the given db connection string.
+    /// Creates a new instance of <see cref="DbConnService"/> with the given set of settings.
     /// </summary>
-    /// <param name="connString">The connection string which should be used by this service.</param>
-    public DbConnService(string connString)
+    /// <param name="settings">The settings for the connection.</param>
+    public DbConnService(IOptions<MysqlSettings> settings)
     {
-        _connString = connString;
+        _settings = settings.Value;
     }
 
     /// <summary>
@@ -24,6 +26,6 @@ public class DbConnService : IDbConnService
     /// <returns>A <see cref="MySqlConnection"/> with the connstring set.</returns>
     public MySqlConnection GetConnection()
     {
-        return new MySqlConnection(_connString);
+        return new MySqlConnection(_settings.ConnectionString);
     }
 }

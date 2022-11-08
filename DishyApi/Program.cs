@@ -27,7 +27,7 @@ public static class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddSingleton<IDbConnService>(s => new DbConnService("Server=localhost;Database=DishDb;Uid=root;Pwd=PENIS;"));
+        builder.Services.AddSingleton<IDbConnService, DbConnService>();
         builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddTransient<IPasswordHasher<UserModel>, PasswordHasher<UserModel>>();
         builder.Services.AddAuthentication(options =>
@@ -50,6 +50,7 @@ public static class Program
         });
         builder.Services.AddAuthorization();
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+        builder.Services.Configure<MysqlSettings>(builder.Configuration.GetSection("MySql"));
 
         var app = builder.Build();
 
