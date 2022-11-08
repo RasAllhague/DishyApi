@@ -88,7 +88,7 @@ public class UsersController : LoggingControllerBase
     /// <param name="request">The userinformation for the creation.</param>
     /// <returns><see cref="OkResult"/> if successfull or a <see cref="BadRequestResult"/> if already exists.</returns>
     [HttpPost]
-    public async Task<ActionResult> Post([FromBody] UserRequest request)
+    public async Task<ActionResult> CreateUserAsync([FromBody] UserRequest request)
     {
         _logger.LogInformation("The creation of a new user has been requested.");
 
@@ -112,7 +112,7 @@ public class UsersController : LoggingControllerBase
     /// <param name="request">The data with which the user should be updated.</param>
     /// <returns><see cref="OkResult"/> containing a <see cref="UserResponse"/> or a <see cref="NotFoundResult"/> if the user was not found.</returns>
     [HttpPut("{id}")]
-    public async Task<ActionResult<UserResponse>> Put(int id, [FromBody] UserRequest request)
+    public async Task<ActionResult<UserResponse>> EditUserAsync(int id, [FromBody] UserRequest request)
     {
         _logger.LogDebug("User modification has been requested.");
 
@@ -138,7 +138,7 @@ public class UsersController : LoggingControllerBase
     /// <param name="id">The id of the user to delete.</param>
     /// <returns><see cref="OkResult"/> if successfull, <see cref="NotFoundResult"/> if not found or <see cref="UnauthorizedResult"/> if the rigths are not given for the current user.</returns>
     [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult> DeleteUserAsync(int id)
     {
         _logger.LogWarning("The deletion of the with {0} user has been requested", id);
 
