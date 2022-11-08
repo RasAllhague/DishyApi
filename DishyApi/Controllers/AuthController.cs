@@ -9,32 +9,56 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace DishyApi.Controllers;
 
+/// <summary>
+/// Model record for login request data.
+/// </summary>
+/// <param name="email">The email used in the loging request.</param>
+/// <param name="password">The password used in the login request.</param>
 public readonly record struct LoginRequest(string email, string password);
 
+/// <summary>
+/// Controller for authentication actions. Generates a jwt token and logs the user out.
+/// </summary>
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class AuthController : LoggingControllerBase
 {
     private readonly IUserService _userService;
     private readonly JwtSettings _jwtSettings;
 
+    /// <summary>
+    /// Creates a new <see cref="AuthController"/> instance and injects all nessecary services.
+    /// </summary>
+    /// <param name="logger">The service needed for logging.</param>
+    /// <param name="userService">The service needed for user auth.</param>
+    /// <param name="jwtSettings">The options needed for jwt generation settings.</param>
     public AuthController(ILogger<AuthController> logger, IUserService userService, IOptions<JwtSettings> jwtSettings) : base(logger)
     {
         _userService = userService;
         _jwtSettings = jwtSettings.Value;
     }
 
+    // GET api/<AuthController>/Logout
+    /// <summary>
+    /// Logs the user out.
+    /// </summary>
+    /// <returns><see cref="BadRequestResult"/></returns>
     [HttpGet("Logout")]
     public async Task<ActionResult> Get()
     {
         return BadRequest();
     }
 
-    // POST api/<AuthController>
+
+    // POST api/<AuthController>/Login
+    /// <summary>
+    /// Logs the user in and creates a jwt token for further authorization.
+    /// </summary>
+    /// <param name="request">The login request made to the api.</param>
+    /// <returns>An <see cref="UnauthorizedResult"/> if verfication failed or an <see cref="OkResult"/> with a encrypted jwt token string.</returns>
     [AllowAnonymous]
     [HttpPost("Login")]
     public async Task<ActionResult> Post([FromBody] LoginRequest request)

@@ -8,8 +8,15 @@ using System.Text;
 
 namespace DishyApi;
 
+/// <summary>
+/// The main entry point class.
+/// </summary>
 public static class Program
 {
+    /// <summary>
+    /// The main entry point.
+    /// </summary>
+    /// <param name="args">The commandline args.</param>
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);

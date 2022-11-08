@@ -5,12 +5,21 @@ using MySqlConnector;
 
 namespace DishyApi.Services;
 
+/// <summary>
+/// Service for useroperations.
+/// </summary>
 public class UserService : IUserService
 {
     private readonly IDbConnService _dbConnService;
     private readonly IPasswordHasher<UserModel> _passwordHasher;
     private readonly ILogger<UserService> _logger;
 
+    /// <summary>
+    /// Creates a new instance of <see cref="UserService"/> and injects the needed services.
+    /// </summary>
+    /// <param name="dbConnService">The injected service for db operations.</param>
+    /// <param name="passwordHasher">The injected service for password hashing.</param>
+    /// <param name="logger">The injected logger.</param>
     public UserService(IDbConnService dbConnService, IPasswordHasher<UserModel> passwordHasher, ILogger<UserService> logger)
     {
         _dbConnService = dbConnService;
@@ -114,6 +123,11 @@ public class UserService : IUserService
         return await GetUserAsync(user.email);
     }
 
+    /// <summary>
+    /// Builds the sql needed for updates.
+    /// </summary>
+    /// <param name="user">The user edit structure.</param>
+    /// <returns>A sql for updating.</returns>
     private static string BuildUpdateSql(UserEdit user)
     {
         string sql = "UPDATE Users SET ";
