@@ -1,6 +1,10 @@
+using DishyApi.Configuration;
 using DishyApi.Models.User;
 using DishyApi.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace DishyApi;
 
@@ -19,6 +23,26 @@ public static class Program
         builder.Services.AddSingleton<IDbConnService>(s => new DbConnService("Server=localhost;Database=DishDb;Uid=root;Pwd=PENIS;"));
         builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddTransient<IPasswordHasher<UserModel>, PasswordHasher<UserModel>>();
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(o =>
+        {
+            o.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                ValidAudience = builder.Configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = false,
+                ValidateIssuerSigningKey = true
+            };
+        });
+        builder.Services.AddAuthorization();
+        builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
         var app = builder.Build();
 
@@ -29,6 +53,7 @@ public static class Program
             app.UseSwaggerUI();
         }
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
 

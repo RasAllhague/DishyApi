@@ -135,8 +135,23 @@ public class UserService : IUserService
         return sql;
     }
 
-    public Task<bool> VerifyLoginAsync(string email, string password)
+    public async Task<bool> VerifyLoginAsync(string email, string password)
     {
-        throw new NotImplementedException();
+        using MySqlConnection conn = _dbConnService.GetConnection();
+
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+        {
+            return false;
+        }
+
+        var user = await GetUserAsync(email);
+
+        if (user is null)
+        {
+            return false;
+        }
+
+        PasswordVerificationResult res = _passwordHasher.VerifyHashedPassword(user, user.Password, password);
+        return res == PasswordVerificationResult.Success || res == PasswordVerificationResult.SuccessRehashNeeded;
     }
 }

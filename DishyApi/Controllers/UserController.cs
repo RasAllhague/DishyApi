@@ -1,6 +1,7 @@
 ﻿using DishyApi.Extensions;
 using DishyApi.Models.User;
 using DishyApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DishyApi.Controllers;
@@ -8,6 +9,7 @@ namespace DishyApi.Controllers;
 public readonly record struct UserResponse(int id, string username, string email, DateTime createDate, DateTime? modifyDate);
 public readonly record struct UserRequest(string username, string email, string password, DateTime createDate, DateTime? modifyDate);
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class UserController : LoggingControllerBase
