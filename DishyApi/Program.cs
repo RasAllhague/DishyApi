@@ -28,10 +28,9 @@ public static class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddSingleton<IDbConnService, DbConnService>();
-        builder.Services.AddSingleton<IUserService, UserService>();
-        builder.Services.AddSingleton<IIngredientService, IngredientService>();
-        builder.Services.AddSingleton<IIngredientCategoryService, IngredientCategoryService>();
+
+        AddSingletons(builder); 
+        
         builder.Services.AddTransient<IPasswordHasher<UserModel>, PasswordHasher<UserModel>>();
         builder.Services.AddTransient<ITokenService, TokenService>();
         builder.Services.AddAuthentication(options =>
@@ -72,5 +71,14 @@ public static class Program
         app.MapControllers();
 
         app.Run();
+    }
+
+    private static void AddSingletons(WebApplicationBuilder builder)
+    {
+        builder.Services.AddSingleton<IDbConnService, DbConnService>();
+        builder.Services.AddSingleton<IUserService, UserService>();
+        builder.Services.AddSingleton<IIngredientService, IngredientService>();
+        builder.Services.AddSingleton<IIngredientCategoryService, IngredientCategoryService>();
+        builder.Services.AddSingleton<ICategoryService, CategoryService>();
     }
 }
