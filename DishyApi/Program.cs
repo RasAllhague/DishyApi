@@ -1,6 +1,7 @@
 using DishyApi.Configuration;
 using DishyApi.Models.User;
 using DishyApi.Services;
+using DishyApi.Services.Ingredients;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;

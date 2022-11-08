@@ -1,6 +1,6 @@
 ﻿using DishyApi.Models.Ingredients;
 
-namespace DishyApi.Services;
+namespace DishyApi.Services.Ingredients;
 
 public readonly record struct IngredientEdit(string name, string? description, string? notes, int imageId);
 

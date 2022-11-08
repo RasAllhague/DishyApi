@@ -3,7 +3,7 @@ using DishyApi.Models.Ingredients;
 using Microsoft.AspNetCore.Diagnostics;
 using MySqlConnector;
 
-namespace DishyApi.Services;
+namespace DishyApi.Services.Ingredients;
 
 public class IngredientService : IIngredientService
 {

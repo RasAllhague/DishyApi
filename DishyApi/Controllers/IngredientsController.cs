@@ -2,6 +2,7 @@
 using DishyApi.Models.Categories;
 using DishyApi.Models.Ingredients;
 using DishyApi.Services;
+using DishyApi.Services.Ingredients;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -137,5 +138,18 @@ public class IngredientsController : LoggingControllerBase
         }
 
         return Ok();
+    }
+
+    // GET api/<IngredientsController>/5/Categories/
+    [HttpGet("{id}/Categories")]
+    public async Task<ActionResult<IEnumerable<CategoryModel>>> GetCategoriesOfIngredient(int id)
+    {
+        var authUser = await _tokenService.RetrievedUserFromTokenAsync(HttpContext);
+        if (authUser is null)
+        {
+            return Unauthorized();
+        }
+
+        throw new NotImplementedException();
     }
 }
