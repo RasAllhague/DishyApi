@@ -1,7 +1,7 @@
 ﻿using DishyApi.Models.Categories;
 using DishyApi.Models.Ingredients;
 
-namespace DishyApi.Services.Ingredients;
+namespace DishyApi.Services.Ingredient;
 
 public interface IIngredientCategoryService
 {

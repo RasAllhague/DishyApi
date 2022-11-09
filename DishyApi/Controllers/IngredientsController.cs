@@ -2,7 +2,7 @@
 using DishyApi.Models.Categories;
 using DishyApi.Models.Ingredients;
 using DishyApi.Services;
-using DishyApi.Services.Ingredients;
+using DishyApi.Services.Ingredient;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

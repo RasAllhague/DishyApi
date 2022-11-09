@@ -2,7 +2,7 @@
 using DishyApi.Models.Categories;
 using MySqlConnector;
 
-namespace DishyApi.Services.Ingredients;
+namespace DishyApi.Services.Ingredient;
 
 public class IngredientCategoryService : IIngredientCategoryService
 {

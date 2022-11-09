@@ -2,7 +2,9 @@ using DishyApi.Configuration;
 using DishyApi.Extensions;
 using DishyApi.Models.User;
 using DishyApi.Services;
-using DishyApi.Services.Ingredients;
+using DishyApi.Services.Dish;
+using DishyApi.Services.Foodplan;
+using DishyApi.Services.Ingredient;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -29,9 +31,7 @@ public static class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-
-        AddSingletons(builder); 
-        
+        builder.AddSingletons();
         builder.Services.AddTransient<IPasswordHasher<UserModel>, PasswordHasher<UserModel>>();
         builder.Services.AddTransient<ITokenService, TokenService>();
         builder.Services.AddAuthentication(options =>
@@ -76,12 +76,16 @@ public static class Program
         app.Run();
     }
 
-    private static void AddSingletons(WebApplicationBuilder builder)
+    private static WebApplicationBuilder AddSingletons(this WebApplicationBuilder builder)
     {
         builder.Services.AddSingleton<IDbConnService, DbConnService>();
         builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddSingleton<IIngredientService, IngredientService>();
         builder.Services.AddSingleton<IIngredientCategoryService, IngredientCategoryService>();
         builder.Services.AddSingleton<ICategoryService, CategoryService>();
+        builder.Services.AddSingleton<IFoodplanService, FoodplanService>();
+        builder.Services.AddSingleton<IDishService, DishService>();
+
+        return builder;
     }
 }
