@@ -1,4 +1,5 @@
 using DishyApi.Configuration;
+using DishyApi.Extensions;
 using DishyApi.Models.User;
 using DishyApi.Services;
 using DishyApi.Services.Ingredients;
@@ -54,6 +55,7 @@ public static class Program
         builder.Services.AddAuthorization();
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
         builder.Services.Configure<MysqlSettings>(builder.Configuration.GetSection("MySql"));
+        builder.Services.Configure<ApiKeySettings>(builder.Configuration.GetSection("ApiKey"));
 
         var app = builder.Build();
 
@@ -66,6 +68,7 @@ public static class Program
 
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseApiKeyMiddleware();
 
 
         app.MapControllers();
