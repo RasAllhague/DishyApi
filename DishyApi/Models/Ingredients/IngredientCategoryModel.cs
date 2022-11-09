@@ -1,4 +1,7 @@
-﻿namespace DishyApi.Models.Ingredients;
+﻿using DishyApi.Models.Categories;
+using DishyApi.Models.User;
+
+namespace DishyApi.Models.Ingredients;
 
 public class IngredientCategoryModel
 {

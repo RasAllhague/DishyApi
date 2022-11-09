@@ -1,4 +1,4 @@
-﻿namespace DishyApi.Models.Ingredients;
+﻿namespace DishyApi.Models.Dishes;
 
 public class MeasurementUnitModel
 {

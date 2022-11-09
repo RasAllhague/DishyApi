@@ -1,5 +1,12 @@
 ﻿namespace DishyApi.Models.Categories;
 
+public enum CategoryType
+{
+    Dish = 1,
+    Ingredient = 2,
+    Foodplan = 3,
+}
+
 public class CategoryTypeModel
 {
     public int Id { get; set; }
