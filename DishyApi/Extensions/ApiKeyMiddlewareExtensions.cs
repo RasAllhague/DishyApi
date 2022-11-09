@@ -1,4 +1,4 @@
-﻿using DishyApi.Middlewares.ApiKey;
+﻿using DishyApi.Middlewares;
 
 namespace DishyApi.Extensions;
 

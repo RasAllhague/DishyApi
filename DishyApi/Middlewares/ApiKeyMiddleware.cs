@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 
-namespace DishyApi.Middlewares.ApiKey;
+namespace DishyApi.Middlewares;
 
 public class ApiKeyMiddleware
 {
