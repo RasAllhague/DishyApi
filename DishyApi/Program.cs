@@ -85,6 +85,7 @@ public static class Program
         builder.Services.AddSingleton<ICategoryService, CategoryService>();
         builder.Services.AddSingleton<IFoodplanService, FoodplanService>();
         builder.Services.AddSingleton<IDishService, DishService>();
+        builder.Services.AddSingleton<IImageService, ImageService>();
 
         return builder;
     }
